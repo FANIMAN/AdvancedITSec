@@ -1,0 +1,15 @@
+/* CommentForm */
+.container .commentform{
+    /* margin-top: 4rem; */
+}
+
+.error {color: #FF0000;}
+
+.homepage{
+    margin-top: 5rem;
+}
+
+/* viewcomments */
+.commentpage {
+    margin-top: 5rem;
+}
