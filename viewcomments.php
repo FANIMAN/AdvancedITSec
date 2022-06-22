@@ -43,13 +43,10 @@ require('config.php');
 <div class="container">
 <div class="row commentpage">   
         <div class="col-sm-2">
-			<?php
+			<!-- <?php
                $role = $_SESSION['role'];
 			   $result = $role == 'member' ? 'welcome.php' : 'adminwelcome.php';
-			//    echo "$result"
-			  
-
-			?>
+			?> -->
 			 <a href="welcome.php">Back</a>
           
             

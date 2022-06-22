@@ -35,7 +35,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password']) || $_SESSION[
     </div>
   
     
-    <?php print_r($_SESSION); ?>
+    <!-- <?php print_r($_SESSION); ?> -->
     <div class="container-fluid">
     <div class="row welcome">
         <!-- <button class="btn btn-primary">Click me</button> -->

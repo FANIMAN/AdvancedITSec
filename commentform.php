@@ -15,20 +15,7 @@ $name = $email = $subject = $filename = $fromuser = "";
 // if(isset($_POST) & !empty($_POST)){
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        // name of the uploaded file
-    $filenamee = $_FILES['filename']['name'];
-
-    // destination of the file on the server
-    $destination = 'uploads/' . $filenamee;
-
-    // get the file extension
-    $extension = pathinfo($filenamee, PATHINFO_EXTENSION);
-
-    // the physical file on a temporary uploads directory on the server
-    $file = $_FILES['filename']['tmp_name'];
-
-    
-    
+  
     if (empty($_POST["name"])) {
         $nameErr = "Name is required";
       } else {
@@ -59,16 +46,21 @@ $name = $email = $subject = $filename = $fromuser = "";
       }
 
 
-      $filename = mysqli_real_escape_string($conn, $filename);
+      // $filename = mysqli_real_escape_string($conn, $filename);
     
 
 
-    //   if (empty($_POST["filename"])) {
-    //     $fileErr = "File is required";
-    //   } else {
-    //     // $filenam = test_input($_POST["filename"]);
-    //     $filename = mysqli_real_escape_string($conn, $filename);
-    //   }
+      if (empty($_FILES['filename']['name'])) {
+        $fileErr = "File is required";
+      } else {
+        // $filenam = test_input($_POST["filename"]);
+        $filename = mysqli_real_escape_string($conn, $filename);
+      }
+
+
+
+
+
     //       if (!in_array($extension, ['zip', 'pdf', 'docx'])) {
     //     echo "You file extension must be .zip, .pdf or .docx";
     // } elseif ($_FILES['myfile']['size'] > 1000000) { // file shouldn't be larger than 1Megabyte
@@ -85,16 +77,65 @@ $name = $email = $subject = $filename = $fromuser = "";
     //     }
     // }
 
+
+          // // name of the uploaded file
+          // $filenamee = $_FILES['filename']['name'];
+
+          // // destination of the file on the server
+          // $destination = 'uploads/' . $filenamee;
+      
+          // // get the file extension
+          // $extension = pathinfo($filenamee, PATHINFO_EXTENSION);
+      
+          // // the physical file on a temporary uploads directory on the server
+          // $file = $_FILES['filename']['tmp_name'];
+
+
+
     $fromuser = $_SESSION['username'];
 
-    if(!empty($_POST["name"]) && !empty($_POST["email"]) && !empty($_POST["subject"]) && empty($nameErr) && empty($emailErr) && empty($subjectErr) ){
-        $isql = "INSERT INTO comments (name, email, subject, filename, fromuser) VALUES ('$name', '$email', '$subject', '$filename', '$fromuser')";
+    if(!empty($_POST["name"]) && !empty($_POST["email"]) && !empty($_POST["subject"]) && empty($nameErr) && empty($emailErr) && empty($subjectErr) && empty($fileErr)){
+      $name = $_POST['name'];
+      if (isset($_FILES['filename']['name']))
+      {
+        $file_name = $_FILES['filename']['name'];
+        $file_tmp = $_FILES['filename']['tmp_name'];
+
+        move_uploaded_file($file_tmp,"./pdf/".$file_name);
+
+        $isql = "INSERT INTO comments (name, email, subject, filename, fromuser) VALUES ('$name', '$email', '$subject', '$file_name', '$fromuser')";
         $ires = mysqli_query($conn, $isql) or die(mysqli_error($conn));
         if($ires){
             $smsg = "Your Comment Submitted Successfully";
         }else{
             $fmsg = "Failed to Submit Your Comment";
         }
+
+      }
+      else
+      {
+         ?>
+          <div class=
+          "alert alert-danger alert-dismissible
+          fade show text-center">
+            <a class="close" data-dismiss="alert"
+               aria-label="close">×</a>
+            <strong>Failed!</strong>
+                File must be uploaded in PDF format!
+          </div>
+        <?php
+      }
+
+
+
+
+        // $isql = "INSERT INTO comments (name, email, subject, filename, fromuser) VALUES ('$name', '$email', '$subject', '$filename', '$fromuser')";
+        // $ires = mysqli_query($conn, $isql) or die(mysqli_error($conn));
+        // if($ires){
+        //     $smsg = "Your Comment Submitted Successfully";
+        // }else{
+        //     $fmsg = "Failed to Submit Your Comment";
+        // }
        
     }else{
         $fmsg = "Please fill all the questions correctly";
@@ -165,8 +206,8 @@ $name = $email = $subject = $filename = $fromuser = "";
                 <?php if(isset($fmsg)){ ?><div class="alert alert-danger" role="alert"> <?php echo $fmsg; ?> </div><?php } ?>
                 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Name</label>
-                    <input type="text" name="name" class="form-control" id="exampleInputEmail1" placeholder="Name">
+                    <label for="exampleInputName1">Name</label>
+                    <input type="text" name="name" class="form-control" id="exampleInputName1" placeholder="Name">
                     <span class="error">* <?php echo $nameErr;?></span>
                 </div>
                 <div class="form-group">
